@@ -57,8 +57,11 @@ export const Workout = () => {
 
   const onDeleteWorkout = () => {
     dispatch(deleteWorkout(id))
-    window.location.href = '/'
   }
+
+  useEffect(() => {
+    if (!workout) window.location.href = '/'
+  }, [workout])
 
   useEffect(() => {
     if (workout && muscleVolume.length > 0 && liftVolume.length > 0) {

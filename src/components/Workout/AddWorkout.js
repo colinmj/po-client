@@ -133,9 +133,6 @@ const AddWorkout = () => {
   const workoutCount = useRef(workouts.length)
 
   useEffect(() => {
-    console.log(workouts)
-    console.log(workoutCount.current)
-
     if (workouts.length > workoutCount.current) {
       window.location.href = '/'
     }
