@@ -41,7 +41,7 @@ export const getWorkoutsByDate = (params, startDate, endDate, exercise) => {
 }
 
 export const getAllWorkoutsByUser = (params) => {
-  const userUrl = workoutsUrl + params.user
+  const userUrl = workoutsUrl + params.user + '/all-workouts'
   return axios.get(userUrl)
 }
 
