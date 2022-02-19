@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { DateTime } from 'luxon'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
@@ -7,7 +7,7 @@ import { Modal, Box, Button, Container, TextField } from '@mui/material'
 import 'react-datepicker/dist/react-datepicker.css'
 
 //actions
-import { createWorkout, getWorkouts } from '../../actions/workouts.js'
+import { createWorkout, getAllWorkoutsByUser } from '../../actions/workouts.js'
 import {
   createFavorite,
   getFavorites,
@@ -120,21 +120,28 @@ const AddWorkout = () => {
     )
   }, [dispatch, userEmail])
 
+  useEffect(() => {
+    dispatch(
+      getAllWorkoutsByUser({
+        user: userEmail,
+      })
+    )
+  }, [dispatch, userEmail])
+
   const favorites = useSelector((state) => state.favorites)
   const workouts = useSelector((state) => state.workouts)
+  const workoutCount = useRef(workouts.length)
 
   useEffect(() => {
-    // console.log('added workout')
-    // console.log(workouts)
-    window.location.href = '/'
+    if (workouts.length > workoutCount.current) {
+      window.location.href = '/'
+    }
   }, [workouts])
 
   //add workout to database and redirect to the dashboard
   const handleSubmit = (e) => {
     e.preventDefault()
     dispatch(createWorkout(workoutData))
-
-    //window.location.href = '/'
   }
 
   const filterUnit = (value) => {

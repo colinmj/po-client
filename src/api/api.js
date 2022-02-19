@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 //api urls
-const workoutsUrl = process.env.REACT_APP_API +  'workouts/'
+const workoutsUrl = process.env.REACT_APP_API + 'workouts/'
 const usersUrl = process.env.REACT_APP_API + 'users'
 const favoritesUrl = process.env.REACT_APP_API + 'favorites/'
 const trainingWeeksUrl = process.env.REACT_APP_API + 'training-weeks/'
@@ -18,17 +18,12 @@ export const deleteFavorite = (params) => {
 }
 
 export const getWorkouts = (params) => {
-
-  console.log(workoutsUrl)
-
   const userUrl = workoutsUrl + params.user + '/workouts/' + params.trainingWeek
   return axios.get(userUrl)
 }
 
 export const getWorkoutsByDate = (params, startDate, endDate, exercise) => {
   let url = workoutsUrl + params.user + '/workouts'
-
- 
 
   if (startDate) {
     url += `?startDate=${startDate}`
@@ -43,6 +38,11 @@ export const getWorkoutsByDate = (params, startDate, endDate, exercise) => {
   }
 
   return axios.get(url)
+}
+
+export const getAllWorkoutsByUser = (params) => {
+  const userUrl = workoutsUrl + params.user
+  return axios.get(userUrl)
 }
 
 export const getWorkout = (params) => {

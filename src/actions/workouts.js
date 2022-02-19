@@ -33,6 +33,15 @@ export const getWorkoutsByDate =
     }
   }
 
+export const getAllWorkoutsByUser = (params) => async (dispatch) => {
+  try {
+    const { data } = await api.getAllWorkoutsByUser(params)
+    dispatch({ type: 'FETCH_WORKOUTS', payload: data })
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
 export const getWorkout = (params) => async (dispatch) => {
   try {
     const { data } = await api.getWorkout(params)
