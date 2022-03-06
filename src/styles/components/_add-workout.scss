@@ -1,4 +1,35 @@
 .add-workout {
+  &__workout {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    > div {
+      flex-basis: 50%;
+    }
+
+    > ul {
+      padding: 20px;
+      flex-basis: 40%;
+      max-height: 600px;
+      overflow-y: scroll;
+    }
+
+    > form {
+      margin-bottom: 20px;
+    }
+
+    > form,
+    > button {
+      flex-basis: 100%;
+    }
+
+    > button {
+      max-width: 200px;
+      margin-top: 20px;
+    }
+  }
+
   &__form-wrapper {
     display: flex;
     flex-wrap: wrap;

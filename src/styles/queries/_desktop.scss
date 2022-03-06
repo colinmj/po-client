@@ -1,0 +1,25 @@
+@media all and (max-width: 1080px) {
+  .po {
+    &__mobile-data-list {
+      display: block;
+      margin-bottom: 40px;
+
+      .MuiSelect-select {
+        min-width: 275px;
+      }
+    }
+
+    &__workout-chart-view {
+      justify-content: center;
+    }
+  }
+
+  .add-workout {
+    &__workout {
+      > div,
+      > ul {
+        flex-basis: 100%;
+      }
+    }
+  }
+}

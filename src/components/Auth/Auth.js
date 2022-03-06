@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { createUser } from '../../actions/users'
 
 import { Avatar, Button, Container, Paper } from '@mui/material'
@@ -46,14 +46,22 @@ export const Auth = () => {
   }
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Paper elevation={3} style={{ padding: 20 }}>
-        <Avatar style={{ margin: '0 auto 30px auto' }}>
-          <LockIcon />
-        </Avatar>
-        {/* <Typography variant="h5">{isSignUp ? "Sign Up" : "Sign In"}</Typography> */}
-        <form onSubmit={handleSubmit}>
-          {/* <Grid container spacing={2}>
+    <>
+      <Container
+        maxWidth="md"
+        style={{ textAlign: 'center', marginBottom: 30 }}>
+        <h5>The ultimate tool to track your lifting progress</h5>
+        <Link to="/how-it-works">Learn More</Link>
+      </Container>
+
+      <Container component="main" maxWidth="xs">
+        <Paper elevation={3} style={{ padding: 20 }}>
+          <Avatar style={{ margin: '0 auto 30px auto' }}>
+            <LockIcon />
+          </Avatar>
+          {/* <Typography variant="h5">{isSignUp ? "Sign Up" : "Sign In"}</Typography> */}
+          <form onSubmit={handleSubmit}>
+            {/* <Grid container spacing={2}>
             {isSignUp && (
               <>
                 <Input
@@ -94,27 +102,27 @@ export const Auth = () => {
             )}
           </Grid> */}
 
-          <GoogleLogin
-            clientId={process.env.REACT_APP_GOOGLE_ID}
-            render={(renderProps) => (
-              <Button
-                fullWidth
-                onClick={renderProps.onClick}
-                disabled={renderProps.disabled}
-                startIcon={<Icon />}
-                variant="contained">
-                Sign In With Google
-              </Button>
-            )}
-            onSuccess={googleSuccess}
-            onFailure={googleFailure}
-            cookiePolicy="single_host_origin"
-          />
+            <GoogleLogin
+              clientId={process.env.REACT_APP_GOOGLE_ID}
+              render={(renderProps) => (
+                <Button
+                  fullWidth
+                  onClick={renderProps.onClick}
+                  disabled={renderProps.disabled}
+                  startIcon={<Icon />}
+                  variant="contained">
+                  Sign In With Google
+                </Button>
+              )}
+              onSuccess={googleSuccess}
+              onFailure={googleFailure}
+              cookiePolicy="single_host_origin"
+            />
 
-          {/* <Button type="submit" fullWidth variant="contained">
+            {/* <Button type="submit" fullWidth variant="contained">
             {isSignUp ? "Sign Up" : "Sign In"}
           </Button> */}
-          {/* <Grid container justify="flex-end">
+            {/* <Grid container justify="flex-end">
             <Grid item>
               <Button onClick={switchMode}>
                 {isSignUp
@@ -123,8 +131,9 @@ export const Auth = () => {
               </Button>
             </Grid>
           </Grid> */}
-        </form>
-      </Paper>
-    </Container>
+          </form>
+        </Paper>
+      </Container>
+    </>
   )
 }

@@ -24,6 +24,7 @@ import WorkoutList from './WorkoutList.js'
 
 //functions
 import { fetchExercisesByName, fetchExercisesByTarget } from '../../api.js'
+import { elSortino } from '../../utils/index.js'
 
 const dateFormat = {
   weekday: 'long',
@@ -131,6 +132,9 @@ const AddWorkout = () => {
   const favorites = useSelector((state) => state.favorites)
   const workouts = useSelector((state) => state.workouts)
   const workoutCount = useRef(workouts.length)
+
+  //sort favorites alphabetically
+  elSortino(favorites, 'name')
 
   useEffect(() => {
     if (workouts.length > workoutCount.current) {
@@ -304,9 +308,8 @@ const AddWorkout = () => {
   }
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="xl">
       <h2>Add Workout</h2>
-      <UnitFilter filter={filterUnit} />
 
       <div className="add-workout__form-wrapper">
         <TextField
@@ -372,36 +375,43 @@ const AddWorkout = () => {
             !loading && <h5>No Exercises Turned Up for {exerciseQuery}</h5>
           )}
         </div>
+      </div>
 
+      <section class="add-workout__workout">
         {workoutData.currentExercise.name ? (
-          <Lift
-            exercise={workoutData.currentExercise}
-            callback={addSet}
-            getFavorites={getFavorites}
-            addToFavorites={addToFavorites}
-            removeFromFavorites={removeFromFavorites}
-            unit={unit}
-            userEmail={userEmail}
-          />
+          <>
+            <UnitFilter filter={filterUnit} style={{ marginBottom: 20 }} />
+            <Lift
+              exercise={workoutData.currentExercise}
+              callback={addSet}
+              getFavorites={getFavorites}
+              addToFavorites={addToFavorites}
+              removeFromFavorites={removeFromFavorites}
+              unit={unit}
+              userEmail={userEmail}
+            />
+          </>
         ) : (
           <div>
             <h5>Select an exercise from the filter options!</h5>
           </div>
         )}
-      </div>
 
-      {workoutData.totalSets.length > 0 && (
-        <WorkoutList
-          sets={workoutData.totalSets}
-          callback={removeLift}
-          enableRemove={true}
-          unit={unit}
-        />
-      )}
+        {workoutData.totalSets.length > 0 && (
+          <WorkoutList
+            sets={workoutData.totalSets}
+            callback={removeLift}
+            enableRemove={true}
+            unit={unit}
+          />
+        )}
 
-      {workoutData.totalSets.length > 0 && (
-        <button onClick={() => setOpenModal(true)}>Add Workout</button>
-      )}
+        {workoutData.totalSets.length > 0 && (
+          <button className="button" onClick={() => setOpenModal(true)}>
+            Add Workout
+          </button>
+        )}
+      </section>
 
       <Modal open={openModal} onClose={handleCloseModal}>
         <Box sx={modalStyles}>

@@ -8,7 +8,7 @@ export const BarChart = ({ data, urlParam, unit }) => {
 
   const afterBody = () => {
     return unit
-}
+  }
 
   const barChartOptions = {
     onClick: async (e, element) => {
@@ -16,6 +16,7 @@ export const BarChart = ({ data, urlParam, unit }) => {
       const workoutId = datasets[0]['id'][index]
 
       if (workoutId) {
+        window.scroll(0, 0)
         history.push(`/${urlParam}/${workoutId}`)
       }
     },

@@ -31,6 +31,7 @@ const NavBar = () => {
         <header id="util-nav">
           <Link to="/add-workout">Add Workout</Link>
           <Link to="/exercise-library">Exercise Library</Link>
+          <Link to="/how-it-works">How It Works</Link>
         </header>
       )}
 

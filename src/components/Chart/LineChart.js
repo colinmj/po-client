@@ -16,6 +16,7 @@ const LineChart = ({ data, urlParam, unit, dataset }) => {
         const id = data.ids[index]
 
         if (urlParam) {
+          window.scroll(0, 0)
           history.push(`/${urlParam}/${id}`)
         }
       }

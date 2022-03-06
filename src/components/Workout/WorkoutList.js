@@ -31,6 +31,7 @@ const WorkoutList = ({ sets, callback, enableRemove, unit }) => {
             {enableRemove && (
               <button
                 className="button"
+                style={{ minWidth: 40, minHeight: 40 }}
                 onClick={() =>
                   doCallback(
                     i,
@@ -39,7 +40,7 @@ const WorkoutList = ({ sets, callback, enableRemove, unit }) => {
                     set.volume[set.target]
                   )
                 }>
-                Remove
+                X
               </button>
             )}
           </li>

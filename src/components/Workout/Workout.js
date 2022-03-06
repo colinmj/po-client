@@ -60,7 +60,7 @@ export const Workout = () => {
   }
 
   useEffect(() => {
-    if (!workout) window.location.href = '/'
+    if (workout === '') window.location.href = '/'
   }, [workout])
 
   useEffect(() => {

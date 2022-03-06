@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { DateTime } from 'luxon'
 import DatePicker from 'react-datepicker'
 import { Container, Modal, Box } from '@mui/material'
+import { useHistory } from 'react-router-dom'
 
 import 'react-datepicker/dist/react-datepicker.css'
 
@@ -17,6 +18,7 @@ import LineChart from '../Chart/LineChart'
 import VolumeFilter from './VolumeFilter'
 import UnitFilter from './UnitFilter'
 import DataFilter from './DataFilter'
+import List from './List'
 import ViewFilter from './ViewFilter'
 import Metrics from './Metrics'
 
@@ -46,6 +48,8 @@ const modalStyles = {
 }
 
 const Dashboard = () => {
+  const history = useHistory()
+
   //state
   const [user] = useState(JSON.parse(localStorage.getItem('profile')))
   const [unit, setUnit] = useState(
@@ -81,6 +85,10 @@ const Dashboard = () => {
       ? new Date(localStorage.getItem('endDate'))
       : DateTime.now().endOf('week').startOf('day').toJSDate(),
   })
+
+  //dropdowns to select workouts/training weeks on mobile
+  const [mobileWorkoutsSelect, setMobileWorkoutsSelect] = useState([])
+  const [mobileWeeksSelect, setMobileWeeksSelect] = useState([])
 
   let trainingWeeks = []
   let workouts = []
@@ -176,6 +184,7 @@ const Dashboard = () => {
   //close modal
   const handleCloseModal = () => setOpenModal(false)
 
+  //prepare date for the metrics view
   const assignData = (data) => {
     if (data.length > 0) {
       setRateOfGrowth(calculateGrowthRate(data))
@@ -184,9 +193,18 @@ const Dashboard = () => {
     }
   }
 
+  //dropdowns for mobile view
+
+  const linkToView = (urlBase, id) => {
+    window.scroll(0, 0)
+    history.push(`/${urlBase}/${id}`)
+  }
+
   //adjust chart data to display training weeks
   const displayTrainingWeeks = () => {
     trainingWeeks = trainingWeeks.filter((w) => w[target][unit] > 0)
+
+    setMobileWeeksSelect(trainingWeeks)
 
     const trainingWeekVolume = trainingWeeks.map(
       (w) => w[target][renderTargetData(dataset)]
@@ -200,7 +218,7 @@ const Dashboard = () => {
           ...chartData.data,
           labels:
             trainingWeeks &&
-            trainingWeeks.map((week) => formateZeDate(week.weekStart)),
+            trainingWeeks.map((week) => formateZeDate(week.weekStart, true)),
           ids: trainingWeeks && trainingWeeks.map((week) => week._id),
           datasets: [
             ...chartData.data.datasets,
@@ -222,6 +240,9 @@ const Dashboard = () => {
   //adjust chart data to display workouts
   const displayWorkouts = () => {
     workouts = workouts.filter((w) => w.volume[target][unit] > 0)
+
+    setMobileWorkoutsSelect(workouts)
+
     const workoutVolume = workouts.map(
       (w) => w.volume[target][renderTargetData(dataset)]
     )
@@ -317,8 +338,12 @@ const Dashboard = () => {
 
   //choose an exercise from your list of favorites from that sweet, sweet modal
   const onExerciseSubmit = (exc) => {
+    console.log('running')
+
     handleCloseModal()
     localStorage.setItem('exercise', exc.trim())
+    localStorage.setItem('view', 'workouts')
+
     setExercise(exc.trim())
     setView('workouts')
     dispatch(
@@ -381,6 +406,22 @@ const Dashboard = () => {
           <button className="button" onClick={() => setOpenModal(true)}>
             Change Exercise
           </button>
+        )}
+      </section>
+
+      <section class="po__mobile-data-list">
+        {view === 'workouts' ? (
+          <List
+            urlBase="workouts"
+            data={mobileWorkoutsSelect}
+            redirect={linkToView}
+          />
+        ) : (
+          <List
+            urlBase="training-weeks"
+            data={mobileWeeksSelect}
+            redirect={linkToView}
+          />
         )}
       </section>
 

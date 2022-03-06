@@ -12,6 +12,7 @@ import Exercise from './components/Exercise/Exercise'
 import Dashboard from './components/Dashboard/Dashboard'
 import TrainingWeek from './components/TrainingWeek/TrainingWeek'
 import Workout from './components/Workout/Workout'
+import HowItWorks from './components/HowItWorks'
 import { PrivateRoute } from './components/PrivateRoute'
 import { Auth } from './components/Auth/Auth'
 
@@ -24,6 +25,7 @@ const App = () => {
         <PrivateRoute path="/add-workout" exact component={AddWorkout} />
         <PrivateRoute path="/exercise-library" exact component={Exercises} />
         <Route path="/login" exact component={Auth} />
+        <Route path="/how-it-works" exact component={HowItWorks} />
         <PrivateRoute path="/training-weeks/:id" component={TrainingWeek} />
         <PrivateRoute path="/workouts/:id" component={Workout} />
         <PrivateRoute path="/exercise/:id" component={Exercise} />

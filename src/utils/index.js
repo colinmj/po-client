@@ -38,9 +38,15 @@ export const calculateAverage = (data) => {
   return data.reduce((a, b) => a + b) / data.length
 }
 
-export const formateZeDate = (leDate) => {
+export const formateZeDate = (leDate, isWeek) => {
+  let addDays = 0
+
+  if (isWeek) addDays = 1
+
   const rawDate = new Date(leDate)
-  const niceDate = DateTime.fromJSDate(rawDate).toFormat('d/M/yy')
+  const niceDate = DateTime.fromJSDate(rawDate)
+    .plus({ days: addDays })
+    .toFormat('d/M/yy')
 
   return niceDate
 }
