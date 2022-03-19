@@ -154,6 +154,7 @@ const Dashboard = () => {
   //sorting el data
   elSortino(trainingWeeks, 'weekStart')
   elSortino(workouts, 'date')
+  elSortino(favorites, 'name')
 
   //lets display the chart data if any of these things change
   useEffect(() => {

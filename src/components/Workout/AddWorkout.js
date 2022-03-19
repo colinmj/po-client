@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { DateTime } from 'luxon'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
@@ -7,7 +7,7 @@ import { Modal, Box, Button, Container, TextField } from '@mui/material'
 import 'react-datepicker/dist/react-datepicker.css'
 
 //actions
-import { createWorkout, getAllWorkoutsByUser } from '../../actions/workouts.js'
+import { createWorkout } from '../../actions/workouts.js'
 import {
   createFavorite,
   getFavorites,
@@ -25,6 +25,7 @@ import WorkoutList from './WorkoutList.js'
 //functions
 import { fetchExercisesByName, fetchExercisesByTarget } from '../../api.js'
 import { elSortino } from '../../utils/index.js'
+import Loader from '../Loader.js'
 
 const dateFormat = {
   weekday: 'long',
@@ -62,6 +63,7 @@ const AddWorkout = () => {
   const [unit, setUnit] = useState('lbs')
   const [exerciseQuery, setExerciseQuery] = useState('')
   const [loading, setLoading] = useState(false)
+  const [creatingWorkout, setCreatingWorkout] = useState(false)
   const userEmail = user.result.email
   const location = useLocation()
 
@@ -121,30 +123,15 @@ const AddWorkout = () => {
     )
   }, [dispatch, userEmail])
 
-  useEffect(() => {
-    dispatch(
-      getAllWorkoutsByUser({
-        user: userEmail,
-      })
-    )
-  }, [dispatch, userEmail])
-
   const favorites = useSelector((state) => state.favorites)
-  const workouts = useSelector((state) => state.workouts)
-  const workoutCount = useRef(workouts.length)
 
   //sort favorites alphabetically
   elSortino(favorites, 'name')
 
-  useEffect(() => {
-    if (workouts.length > workoutCount.current) {
-      window.location.href = '/'
-    }
-  }, [workouts])
-
   //add workout to database and redirect to the dashboard
   const handleSubmit = (e) => {
     e.preventDefault()
+    setCreatingWorkout(true)
     dispatch(createWorkout(workoutData))
   }
 
@@ -308,131 +295,144 @@ const AddWorkout = () => {
   }
 
   return (
-    <Container maxWidth="xl">
-      <h2>Add Workout</h2>
+    <>
+      {creatingWorkout ? (
+        <Loader />
+      ) : (
+        <Container maxWidth="xl">
+          <h2>Add Workout</h2>
 
-      <div className="add-workout__form-wrapper">
-        <TextField
-          label="Optional Title"
-          value={workoutData.title}
-          variant="standard"
-          onChange={(e) =>
-            setWorkoutData({
-              ...workoutData,
-              title: e.target.value,
-            })
-          }
-        />
-
-        <div className="add-workout__date-wrapper">
-          <label>Date</label>
-          <DatePicker
-            selected={workoutData.date}
-            onChange={(date) =>
-              setWorkoutData({
-                ...workoutData,
-                date,
-                trainingWeek:
-                  DateTime.fromJSDate(date)
-                    .startOf('week')
-                    .toFormat('dd LLL yy') +
-                  ' - ' +
-                  DateTime.fromJSDate(date).endOf('week').toFormat('dd LLL yy'),
-
-                weekStart: DateTime.fromJSDate(date)
-                  .startOf('week')
-                  .toISODate(),
-                weekEnd: DateTime.fromJSDate(date).endOf('week').toISODate(),
-                dateString:
-                  DateTime.fromJSDate(date).toLocaleString(dateFormat),
-              })
-            }
-          />
-        </div>
-
-        <div className="add-workout__exercise-selection">
-          <h4>Exercise Selection</h4>
-
-          {favorites.length > 0 && (
-            <Favorites favorites={favorites} callback={chooseExercise} />
-          )}
-
-          <ExerciseSelection
-            searchFunction={searchExercise}
-            filterFunction={filterExercise}
-          />
-
-          {workoutData.searchResults.length > 0 ? (
-            <ExerciseList
-              exercises={workoutData.searchResults}
-              callback={chooseExercise}
-              exerciseQuery={exerciseQuery}
-              loading={loading}
-              label={`Results for ${exerciseQuery}`}
+          <div className="add-workout__form-wrapper">
+            <TextField
+              label="Optional Title"
+              value={workoutData.title}
+              variant="standard"
+              onChange={(e) =>
+                setWorkoutData({
+                  ...workoutData,
+                  title: e.target.value,
+                })
+              }
             />
-          ) : (
-            exerciseQuery &&
-            !loading && <h5>No Exercises Turned Up for {exerciseQuery}</h5>
-          )}
-        </div>
-      </div>
 
-      <section class="add-workout__workout">
-        {workoutData.currentExercise.name ? (
-          <>
-            <UnitFilter filter={filterUnit} style={{ marginBottom: 20 }} />
-            <Lift
-              exercise={workoutData.currentExercise}
-              callback={addSet}
-              getFavorites={getFavorites}
-              addToFavorites={addToFavorites}
-              removeFromFavorites={removeFromFavorites}
-              unit={unit}
-              userEmail={userEmail}
-            />
-          </>
-        ) : (
-          <div>
-            <h5>Select an exercise from the filter options!</h5>
+            <div className="add-workout__date-wrapper">
+              <label>Date</label>
+              <DatePicker
+                selected={workoutData.date}
+                onChange={(date) =>
+                  setWorkoutData({
+                    ...workoutData,
+                    date,
+                    trainingWeek:
+                      DateTime.fromJSDate(date)
+                        .startOf('week')
+                        .toFormat('dd LLL yy') +
+                      ' - ' +
+                      DateTime.fromJSDate(date)
+                        .endOf('week')
+                        .toFormat('dd LLL yy'),
+
+                    weekStart: DateTime.fromJSDate(date)
+                      .startOf('week')
+                      .toISODate(),
+                    weekEnd: DateTime.fromJSDate(date)
+                      .endOf('week')
+                      .toISODate(),
+                    dateString:
+                      DateTime.fromJSDate(date).toLocaleString(dateFormat),
+                  })
+                }
+              />
+            </div>
+
+            <div className="add-workout__exercise-selection">
+              <h4>Exercise Selection</h4>
+
+              {favorites.length > 0 && (
+                <Favorites favorites={favorites} callback={chooseExercise} />
+              )}
+
+              <ExerciseSelection
+                searchFunction={searchExercise}
+                filterFunction={filterExercise}
+              />
+
+              {workoutData.searchResults.length > 0 ? (
+                <ExerciseList
+                  exercises={workoutData.searchResults}
+                  callback={chooseExercise}
+                  exerciseQuery={exerciseQuery}
+                  loading={loading}
+                  label={`Results for ${exerciseQuery}`}
+                />
+              ) : (
+                exerciseQuery &&
+                !loading && <h5>No Exercises Turned Up for {exerciseQuery}</h5>
+              )}
+            </div>
           </div>
-        )}
 
-        {workoutData.totalSets.length > 0 && (
-          <WorkoutList
-            sets={workoutData.totalSets}
-            callback={removeLift}
-            enableRemove={true}
-            unit={unit}
-          />
-        )}
+          <section class="add-workout__workout">
+            {workoutData.currentExercise.name ? (
+              <>
+                <UnitFilter filter={filterUnit} style={{ marginBottom: 20 }} />
+                <Lift
+                  exercise={workoutData.currentExercise}
+                  callback={addSet}
+                  getFavorites={getFavorites}
+                  addToFavorites={addToFavorites}
+                  removeFromFavorites={removeFromFavorites}
+                  unit={unit}
+                  userEmail={userEmail}
+                />
+              </>
+            ) : (
+              <div>
+                <h5>Select an exercise from the filter options!</h5>
+              </div>
+            )}
 
-        {workoutData.totalSets.length > 0 && (
-          <button className="button" onClick={() => setOpenModal(true)}>
-            Add Workout
-          </button>
-        )}
-      </section>
+            {workoutData.totalSets.length > 0 && (
+              <WorkoutList
+                sets={workoutData.totalSets}
+                callback={removeLift}
+                enableRemove={true}
+                unit={unit}
+              />
+            )}
 
-      <Modal open={openModal} onClose={handleCloseModal}>
-        <Box sx={modalStyles}>
-          <h4>Looking Good?</h4>
-          <WorkoutList
-            sets={workoutData.totalSets}
-            enableRemove={false}
-            unit={unit}
-          />
-          <Button variant="contained" onClick={handleSubmit} className="button">
-            Add Workout
-          </Button>
-          <Button
-            variant="contained"
-            className="button btn-red"
-            onClick={handleCloseModal}>
-            No, I need to change something
-          </Button>
-        </Box>
-      </Modal>
-    </Container>
+            {workoutData.totalSets.length > 0 && (
+              <button className="button" onClick={() => setOpenModal(true)}>
+                Add Workout
+              </button>
+            )}
+          </section>
+
+          <Modal open={openModal} onClose={handleCloseModal}>
+            <Box sx={modalStyles}>
+              <h4>Looking Good?</h4>
+              <WorkoutList
+                sets={workoutData.totalSets}
+                enableRemove={false}
+                unit={unit}
+              />
+              <Button
+                variant="contained"
+                onClick={handleSubmit}
+                className="button">
+                Add Workout
+              </Button>
+              <Button
+                variant="contained"
+                className="button btn-red"
+                onClick={handleCloseModal}>
+                No, I need to change something
+              </Button>
+            </Box>
+          </Modal>
+        </Container>
+      )}
+    </>
   )
 }
 
