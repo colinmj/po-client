@@ -5,9 +5,15 @@ const workoutsUrl = process.env.REACT_APP_API + 'workouts/'
 const usersUrl = process.env.REACT_APP_API + 'users'
 const favoritesUrl = process.env.REACT_APP_API + 'favorites/'
 const trainingWeeksUrl = process.env.REACT_APP_API + 'training-weeks/'
+const prsUrl = process.env.REACT_APP_API + 'prs/'
 
 export const getFavorites = (params) => {
   const userUrl = favoritesUrl + params.user
+  return axios.get(userUrl)
+}
+
+export const getPrs = (params) => {
+  const userUrl = prsUrl + params.user
   return axios.get(userUrl)
 }
 

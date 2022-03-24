@@ -21,7 +21,7 @@ const List = ({ urlBase, data, redirect }) => {
           </MenuItem>
           {data &&
             data.map((item) => (
-              <MenuItem value={item._id}>
+              <MenuItem value={item._id} key={item.id}>
                 {item.title
                   ? item.title
                   : item.dateString

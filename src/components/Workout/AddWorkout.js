@@ -67,6 +67,8 @@ const AddWorkout = () => {
   const userEmail = user.result.email
   const location = useLocation()
 
+  const [prCandidates, setPrCandidates] = useState({})
+
   const [workoutData, setWorkoutData] = useState({
     user: userEmail,
     openSubmit: false,
@@ -76,6 +78,8 @@ const AddWorkout = () => {
     type: '',
     exerciseList: [],
     totalSets: [],
+    prs: [],
+    test: '',
     currentExercise: {
       user: userEmail,
       name: '',
@@ -101,13 +105,63 @@ const AddWorkout = () => {
       lowerback: { lbs: 0, kg: 0, sets: 0, reps: 0 },
       calves: { lbs: 0, kg: 0, sets: 0, reps: 0 },
     },
-
     sets: 0,
     reps: 0,
     trainingWeek,
     weekStart,
     weekEnd,
   })
+
+  useEffect(() => {
+    const totalSets = workoutData.totalSets
+
+    const potentialPrs = totalSets.map((set) => {
+      return {
+        exercise: set.exercise,
+        name: set.exercise.split(' ').join('_') + '_' + set.lifts[0].reps,
+        user: userEmail,
+        reps: set.lifts[0].reps,
+        updated_at: workoutData.date,
+        weight: {
+          lbs: +set.lifts[0].lbs,
+          kg: +set.lifts[0].kg,
+        },
+      }
+    })
+
+    potentialPrs.forEach((p) => {
+      if (!prCandidates[p.name]) {
+        setPrCandidates({
+          ...prCandidates,
+          [p.name]: p,
+        })
+      } else {
+        if (+prCandidates[p.name].weight.lbs >= +p.weight.lbs) {
+          return
+        }
+
+        setPrCandidates({
+          ...prCandidates,
+          [p.name]: {
+            ...prCandidates[p.name],
+            weight: {
+              lbs: parseInt(p.weight.lbs),
+              kg: parseInt(p.weight.kg),
+            },
+          },
+        })
+      }
+    })
+  }, [workoutData])
+
+  useEffect(() => {
+    const thePrs = Object.values(prCandidates)
+
+    setWorkoutData({
+      ...workoutData,
+      prs: thePrs,
+    })
+  }, [prCandidates])
 
   useEffect(() => {
     setUser(JSON.parse(localStorage.getItem('profile')))
@@ -189,8 +243,6 @@ const AddWorkout = () => {
   }
 
   const removeLift = (index, target, totalVolume, targetVolume) => {
-    console.log(totalVolume)
-
     setWorkoutData({
       ...workoutData,
       totalSets: workoutData.totalSets.filter((set, i) => i !== index),
@@ -230,6 +282,7 @@ const AddWorkout = () => {
           ...workoutData.exerciseList,
           workoutData.currentExercise.name.trim(),
         ],
+
         totalSets: [
           ...workoutData.totalSets,
           {

@@ -410,7 +410,7 @@ const Dashboard = () => {
         )}
       </section>
 
-      <section class="po__mobile-data-list">
+      <section className="po__mobile-data-list">
         {view === 'workouts' ? (
           <List
             urlBase="workouts"

@@ -1,0 +1,64 @@
+.pr-card {
+  padding: 25px;
+  flex-grow: 1;
+  margin: 5px;
+
+  ul {
+    list-style: none;
+  }
+
+  &.pr-lift-list {
+    li {
+      margin-bottom: 10px;
+      &.active {
+        button {
+          background: $blue_1;
+          color: #fff;
+        }
+      }
+    }
+
+    button {
+      background: none;
+      border: 1px solid $blue_1;
+      border-radius: 10px;
+      padding: 10px;
+      color: $blue_1;
+      font-size: 18px;
+      text-align: left;
+    }
+  }
+
+  .pr-list {
+    li {
+      display: flex;
+      justify-content: space-between;
+      padding: 5px 0;
+      align-items: center;
+      margin-bottom: 15px;
+      border-bottom: 1px solid $light-gray;
+
+      > div {
+        display: flex;
+        align-items: center;
+      }
+
+      h3 {
+        padding-bottom: 0;
+        span {
+          font-size: 16px;
+        }
+      }
+
+      h4 {
+        padding-bottom: 0;
+      }
+    }
+
+    .pr-reps {
+      color: $blue_1;
+      font-size: 22px;
+      margin-right: 20px;
+    }
+  }
+}

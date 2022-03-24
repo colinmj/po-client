@@ -13,6 +13,7 @@ import Dashboard from './components/Dashboard/Dashboard'
 import TrainingWeek from './components/TrainingWeek/TrainingWeek'
 import Workout from './components/Workout/Workout'
 import HowItWorks from './components/HowItWorks'
+import Prs from './components/Prs/Prs'
 import { PrivateRoute } from './components/PrivateRoute'
 import { Auth } from './components/Auth/Auth'
 
@@ -27,6 +28,7 @@ const App = () => {
         <Route path="/login" exact component={Auth} />
         <Route path="/how-it-works" exact component={HowItWorks} />
         <PrivateRoute path="/training-weeks/:id" component={TrainingWeek} />
+        <PrivateRoute path="/prs" component={Prs} />
         <PrivateRoute path="/workouts/:id" component={Workout} />
         <PrivateRoute path="/exercise/:id" component={Exercise} />
       </Switch>

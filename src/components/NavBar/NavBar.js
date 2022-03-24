@@ -32,6 +32,7 @@ const NavBar = () => {
           <Link to="/add-workout">Add Workout</Link>
           <Link to="/exercise-library">Exercise Library</Link>
           <Link to="/how-it-works">How It Works</Link>
+          <Link to="/prs">My PRs</Link>
         </header>
       )}
 
