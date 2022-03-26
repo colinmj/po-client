@@ -11,8 +11,6 @@ const NavBar = () => {
   const history = useHistory()
   const location = useLocation()
 
-  const userEmail = user.result.email
-
   const logout = () => {
     dispatch({ type: 'LOGOUT' })
     history.push('/login')
@@ -29,12 +27,16 @@ const NavBar = () => {
     setUser(JSON.parse(localStorage.getItem('profile')))
   }, [location, user?.token])
 
+  const userEmail = user ? user.result.email : ''
+
   useEffect(() => {
-    dispatch(
-      getPrs({
-        user: userEmail,
-      })
-    )
+    if (userEmail) {
+      dispatch(
+        getPrs({
+          user: userEmail,
+        })
+      )
+    }
   }, [dispatch, userEmail])
 
   const prs = useSelector((state) => state.prs)
