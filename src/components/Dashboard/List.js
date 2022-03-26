@@ -16,12 +16,12 @@ const List = ({ urlBase, data, redirect }) => {
         <Select
           onChange={(e) => onSubmit(e.target.value)}
           defaultValue="placeholder">
-          <MenuItem value="placeholder" disabled>
+          <MenuItem value="placeholder" disabled key="placeholder">
             Choose...
           </MenuItem>
           {data &&
             data.map((item) => (
-              <MenuItem value={item._id} key={item.id}>
+              <MenuItem value={item._id} key={item._id}>
                 {item.title
                   ? item.title
                   : item.dateString

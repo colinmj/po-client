@@ -5,6 +5,7 @@ import '@fontsource/open-sans'
 
 //components
 import NavBar from './components/NavBar/NavBar'
+import Home from './components/Home'
 import Footer from './components/Footer'
 import AddWorkout from './components/Workout/AddWorkout'
 import Exercises from './components/Exercises/Exercises'
@@ -22,7 +23,8 @@ const App = () => {
     <Router>
       <NavBar />
       <Switch>
-        <PrivateRoute path="/" exact component={Dashboard} />
+        <PrivateRoute path="/" exact component={Home} />
+        <PrivateRoute path="/dashboard" exact component={Dashboard} />
         <PrivateRoute path="/add-workout" exact component={AddWorkout} />
         <PrivateRoute path="/exercise-library" exact component={Exercises} />
         <Route path="/login" exact component={Auth} />

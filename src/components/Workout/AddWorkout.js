@@ -425,7 +425,7 @@ const AddWorkout = () => {
             </div>
           </div>
 
-          <section class="add-workout__workout">
+          <section className="add-workout__workout">
             {workoutData.currentExercise.name ? (
               <>
                 <UnitFilter filter={filterUnit} style={{ marginBottom: 20 }} />

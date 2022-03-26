@@ -12,7 +12,9 @@ import Donut from '../Chart/Donut'
 
 const TrainingWeek = () => {
   const [user] = useState(JSON.parse(localStorage.getItem('profile')))
-  const [unit, setUnit] = useState( localStorage.getItem('metric') ? localStorage.getItem('metric') : 'lbs')
+  const [unit, setUnit] = useState(
+    localStorage.getItem('metric') ? localStorage.getItem('metric') : 'lbs'
+  )
   const [isLoading, setisLoading] = useState(true)
   const [chartData, setChartData] = useState({
     data: {},
@@ -38,9 +40,6 @@ const TrainingWeek = () => {
   }, [dispatch, id])
 
   const trainingWeek = useSelector((state) => state.trainingWeeks)
-
-
-  console.log(trainingWeek)
 
   //get corresponding workouts
   useEffect(() => {
@@ -120,7 +119,6 @@ const TrainingWeek = () => {
 
   const { data } = chartData
 
-
   console.log(muscleVolume)
 
   return (
@@ -145,9 +143,6 @@ const TrainingWeek = () => {
               </div>
 
               {muscleVolume.length &&
-
-            
-
                 muscleVolume.map((group) => (
                   <ul key={group[0]}>
                     <li>

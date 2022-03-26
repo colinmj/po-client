@@ -1,4 +1,13 @@
 @media all and (max-width: 760px) {
+  #main-nav {
+    .user-info {
+      flex-direction: column-reverse;
+      > div {
+        margin-bottom: 15px;
+      }
+    }
+  }
+
   //add workout
   .add-workout {
     &__exercise-selection {

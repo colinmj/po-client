@@ -8,7 +8,7 @@ import Loader from '../Loader'
 import { getPrs } from '../../actions/prs'
 
 const Prs = () => {
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('profile')))
+  const [user] = useState(JSON.parse(localStorage.getItem('profile')))
   const [exercises, setExercises] = useState([])
   const [unit, setUnit] = useState(
     localStorage.getItem('metric') ? localStorage.getItem('metric') : 'lbs'
@@ -103,7 +103,7 @@ const Prs = () => {
 
               <ul className="pr-list">
                 {filteredPrs.map((pr) => (
-                  <li>
+                  <li key={`${pr.weight.lbs}-${pr.reps}`}>
                     <div>
                       <span className="pr-reps">X {pr.reps}: </span>
 

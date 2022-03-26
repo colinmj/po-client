@@ -77,6 +77,7 @@ const Dashboard = () => {
     data: {},
     target: 'totalVolume',
   })
+
   const [dates, setDates] = useState({
     startDate: localStorage.getItem('startDate')
       ? new Date(localStorage.getItem('startDate'))

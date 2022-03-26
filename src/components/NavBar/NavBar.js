@@ -37,7 +37,7 @@ const NavBar = () => {
       )}
 
       <header id="main-nav">
-        <Link to="/">
+        <Link to="/dashboard">
           <h2>Progressive Overload</h2>
         </Link>
 
