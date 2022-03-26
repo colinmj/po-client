@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link, useHistory, useLocation } from 'react-router-dom'
 import { Button, Select, MenuItem } from '@mui/material'
+import { getPrs } from '../../actions/prs'
 
 const NavBar = () => {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('profile')))
+  const [showPrs, setShowPrs] = useState(false)
   const dispatch = useDispatch()
   const history = useHistory()
   const location = useLocation()
+
+  const userEmail = user.result.email
 
   const logout = () => {
     dispatch({ type: 'LOGOUT' })
@@ -25,6 +29,22 @@ const NavBar = () => {
     setUser(JSON.parse(localStorage.getItem('profile')))
   }, [location, user?.token])
 
+  useEffect(() => {
+    dispatch(
+      getPrs({
+        user: userEmail,
+      })
+    )
+  }, [dispatch, userEmail])
+
+  const prs = useSelector((state) => state.prs)
+
+  useEffect(() => {
+    if (prs.length) {
+      setShowPrs(true)
+    }
+  }, [prs])
+
   return (
     <>
       {user && (
@@ -32,7 +52,8 @@ const NavBar = () => {
           <Link to="/add-workout">Add Workout</Link>
           <Link to="/exercise-library">Exercise Library</Link>
           <Link to="/how-it-works">How It Works</Link>
-          <Link to="/prs">My PRs</Link>
+
+          {showPrs && <Link to="/prs">My PRs</Link>}
         </header>
       )}
 

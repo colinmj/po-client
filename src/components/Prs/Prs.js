@@ -16,6 +16,7 @@ const Prs = () => {
   const [activeExercise, setActiveExercise] = useState('')
   const [filteredPrs, setFilteredPrs] = useState([])
   const [loading, setLoading] = useState(true)
+  const [noPrs, setNoPrs] = useState(false)
   const userEmail = user.result.email
   const dispatch = useDispatch()
 
@@ -39,6 +40,9 @@ const Prs = () => {
   useEffect(() => {
     if (prs.length > 0) {
       setLoading(false)
+    } else {
+      setLoading(false)
+      setNoPrs(true)
     }
   }, [prs])
 
@@ -76,6 +80,10 @@ const Prs = () => {
     <>
       {loading ? (
         <Loader />
+      ) : noPrs ? (
+        <h5 style={{ textAlign: 'center' }}>
+          You don't have any PRs yet - add a workout to get going!
+        </h5>
       ) : (
         <Container maxWidth="xl" style={{ display: 'flex', flexWrap: 'wrap' }}>
           <div style={{ flexBasis: '100%', marginBottom: 50 }}>
