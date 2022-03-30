@@ -18,11 +18,7 @@ const Home = () => {
   const workouts = useSelector((state) => state.workouts)
 
   useEffect(() => {
-    if (workouts.length) {
-      history.push('/dashboard')
-    } else {
-      history.push('/add-workout')
-    }
+    history.push('/dashboard')
   }, [workouts, history])
 
   return <Loader />

@@ -21,6 +21,7 @@ import DataFilter from './DataFilter'
 import List from './List'
 import ViewFilter from './ViewFilter'
 import Metrics from './Metrics'
+import Loader from '../Loader'
 
 //helpers
 import {
@@ -74,7 +75,9 @@ const Dashboard = () => {
   const [allVolume, setAllVolume] = useState(0)
   const [averageVolume, setAverageVolume] = useState(0)
   const [chartData, setChartData] = useState({
-    data: {},
+    data: {
+      datasets: [],
+    },
     target: 'totalVolume',
   })
 
@@ -86,6 +89,8 @@ const Dashboard = () => {
       ? new Date(localStorage.getItem('endDate'))
       : DateTime.now().endOf('week').startOf('day').toJSDate(),
   })
+
+  const [loading, setLoading] = useState(false)
 
   //dropdowns to select workouts/training weeks on mobile
   const [mobileWorkoutsSelect, setMobileWorkoutsSelect] = useState([])
@@ -101,6 +106,8 @@ const Dashboard = () => {
 
   //dispatch el training weeks
   useEffect(() => {
+    setLoading(true)
+
     dispatch(
       getTrainingWeeks(
         { user: userEmail },
@@ -113,6 +120,8 @@ const Dashboard = () => {
   //dispatch el workouts
   useEffect(() => {
     let exc = exercise ? exercise : ''
+
+    setLoading(true)
 
     dispatch(
       getWorkoutsByDate(
@@ -340,8 +349,6 @@ const Dashboard = () => {
 
   //choose an exercise from your list of favorites from that sweet, sweet modal
   const onExerciseSubmit = (exc) => {
-    console.log('running')
-
     handleCloseModal()
     localStorage.setItem('exercise', exc.trim())
     localStorage.setItem('view', 'workouts')
@@ -362,88 +369,103 @@ const Dashboard = () => {
 
   const { data } = chartData
 
+  useEffect(() => {
+    if (chartData.data.datasets.length) setLoading(false)
+  }, [chartData])
+
   return (
-    <Container maxWidth="xl">
-      <Metrics
-        rateOfGrowth={rateOfGrowth}
-        allVolume={allVolume}
-        averageVolume={averageVolume}
-        view={view}
-        unit={unit}
-        target={target}
-        exercise={exercise}
-        dataset={dataset}
-        startDate={startDate}
-        endDate={endDate}
-      />
-
-      <section className="dashboard-filters">
-        <ViewFilter
-          hasFavorites={favorites.length > 0}
-          filter={changeView}
-          exercise={exercise}
-        />
-
-        <form>
-          <label>Start Date</label>
-          <DatePicker
-            selected={startDate}
-            onChange={(startDate) => dispatchStartDate(startDate)}
-          />
-        </form>
-
-        <form>
-          <label>End Date</label>
-          <DatePicker
-            selected={endDate}
-            onChange={(endDate) => dispatchEndDate(endDate)}
-          />
-        </form>
-
-        {exercise === '' && <VolumeFilter filter={filterMuscle} />}
-        <UnitFilter filter={filterUnit} />
-        <DataFilter filter={changeDataset} />
-
-        {exercise && (
-          <button className="button" onClick={() => setOpenModal(true)}>
-            Change Exercise
-          </button>
-        )}
-      </section>
-
-      <section className="po__mobile-data-list">
-        {view === 'workouts' ? (
-          <List
-            urlBase="workouts"
-            data={mobileWorkoutsSelect}
-            redirect={linkToView}
-          />
+    <>
+      <Container maxWidth="xl">
+        {loading ? (
+          <div>
+            <h5 style={{ textAlign: 'center' }}>Getting your data!</h5>
+            <Loader />
+          </div>
         ) : (
-          <List
-            urlBase="training-weeks"
-            data={mobileWeeksSelect}
-            redirect={linkToView}
-          />
+          <section>
+            <Metrics
+              rateOfGrowth={rateOfGrowth}
+              allVolume={allVolume}
+              averageVolume={averageVolume}
+              view={view}
+              unit={unit}
+              target={target}
+              exercise={exercise}
+              dataset={dataset}
+              startDate={startDate}
+              endDate={endDate}
+            />
+
+            <section className="dashboard-filters">
+              <ViewFilter
+                hasFavorites={favorites.length > 0}
+                filter={changeView}
+                exercise={exercise}
+              />
+
+              <form>
+                <label>Start Date</label>
+                <DatePicker
+                  selected={startDate}
+                  onChange={(startDate) => dispatchStartDate(startDate)}
+                />
+              </form>
+
+              <form>
+                <label>End Date</label>
+                <DatePicker
+                  selected={endDate}
+                  onChange={(endDate) => dispatchEndDate(endDate)}
+                />
+              </form>
+
+              {exercise === '' && <VolumeFilter filter={filterMuscle} />}
+              <UnitFilter filter={filterUnit} />
+              <DataFilter filter={changeDataset} />
+
+              {exercise && (
+                <button className="button" onClick={() => setOpenModal(true)}>
+                  Change Exercise
+                </button>
+              )}
+            </section>
+
+            <section className="po__mobile-data-list">
+              {view === 'workouts' ? (
+                <List
+                  urlBase="workouts"
+                  data={mobileWorkoutsSelect}
+                  redirect={linkToView}
+                />
+              ) : (
+                <List
+                  urlBase="training-weeks"
+                  data={mobileWeeksSelect}
+                  redirect={linkToView}
+                />
+              )}
+            </section>
+          </section>
         )}
-      </section>
 
-      <LineChart data={data} urlParam={view} unit={unit} dataset={dataset} />
+        <LineChart data={data} urlParam={view} unit={unit} dataset={dataset} />
 
-      <Modal open={openModal} onClose={handleCloseModal}>
-        <Box sx={modalStyles}>
-          <ul className="po__dashboard-exercises">
-            {favorites &&
-              favorites.map((fav) => (
-                <li key={fav}>
-                  <button onClick={() => onExerciseSubmit(fav.name)}>
-                    {upperFirst(fav.name)}
-                  </button>
-                </li>
-              ))}
-          </ul>
-        </Box>
-      </Modal>
-    </Container>
+        <Modal open={openModal} onClose={handleCloseModal}>
+          <Box sx={modalStyles}>
+            <ul className="po__dashboard-exercises">
+              {favorites &&
+                favorites.map((fav) => (
+                  <li key={fav}>
+                    <button onClick={() => onExerciseSubmit(fav.name)}>
+                      {upperFirst(fav.name)}
+                    </button>
+                  </li>
+                ))}
+            </ul>
+          </Box>
+        </Modal>
+      </Container>
+    </>
   )
 }
 
