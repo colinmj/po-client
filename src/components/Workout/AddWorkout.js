@@ -472,7 +472,8 @@ const AddWorkout = () => {
               <Button
                 variant="contained"
                 onClick={handleSubmit}
-                className="button">
+                className="button"
+                style={{ marginBottom: 10 }}>
                 Add Workout
               </Button>
               <Button

@@ -85,7 +85,7 @@ export const getTrainingWeek = (params) => {
 
 export const createWorkout = (newWorkout) =>
   axios.post(workoutsUrl, newWorkout).then((result) => {
-    if (result) window.location.href = '/'
+    if (result) window.location.href = '/dashboard'
   })
 
 export const createFavorite = (newFavorite, user) => {

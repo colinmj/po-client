@@ -1,5 +1,5 @@
 .pr-card {
-  padding: 25px;
+  padding: 10px;
   flex-grow: 1;
   margin: 5px;
 
@@ -30,6 +30,7 @@
   }
 
   .pr-list {
+    padding-left: 0;
     li {
       display: flex;
       justify-content: space-between;

@@ -70,11 +70,16 @@ const Prs = () => {
     const theFilteredPrs = prs.filter((pr) => pr.exercise === activeExercise)
 
     setFilteredPrs(theFilteredPrs)
+
+    if (theFilteredPrs.length) setNoPrs(false)
   }, [activeExercise, prs])
 
   const filterUnit = (value) => {
     setUnit(value)
   }
+
+  //sort by lowest reps
+  elSortino(filteredPrs, 'reps')
 
   return (
     <>
