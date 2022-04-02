@@ -429,6 +429,7 @@ const AddWorkout = () => {
             {workoutData.currentExercise.name ? (
               <>
                 <UnitFilter filter={filterUnit} style={{ marginBottom: 20 }} />
+
                 <Lift
                   exercise={workoutData.currentExercise}
                   callback={addSet}
@@ -455,9 +456,16 @@ const AddWorkout = () => {
             )}
 
             {workoutData.totalSets.length > 0 && (
-              <button className="button" onClick={() => setOpenModal(true)}>
-                Add Workout
-              </button>
+              <section
+                style={{
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  width: 100 + '%',
+                }}>
+                <button className="button" onClick={() => setOpenModal(true)}>
+                  Add Workout
+                </button>
+              </section>
             )}
           </section>
 

@@ -8,6 +8,14 @@
     }
   }
 
+  .pr-card {
+    &.pr-lift-list {
+      .MuiSelect-root {
+        width: 100%;
+      }
+    }
+  }
+
   //add workout
   .add-workout {
     &__exercise-selection {

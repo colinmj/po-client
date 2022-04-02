@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { DateTime } from 'luxon'
-import { Container, Card } from '@mui/material'
+import { Container, Card, Select, MenuItem } from '@mui/material'
 import { UnitFilter } from '../Dashboard/UnitFilter'
 import { upperFirst, elSortino } from '../../utils'
 import Loader from '../Loader'
@@ -86,7 +86,7 @@ const Prs = () => {
       {loading ? (
         <Loader />
       ) : noPrs ? (
-        <h5 style={{ textAlign: 'center' }}>
+        <h5 className="no-pr-message" style={{ textAlign: 'center' }}>
           You don't have any PRs yet - add a workout to get going!
         </h5>
       ) : (
@@ -98,16 +98,16 @@ const Prs = () => {
           <Card className="pr-lift-list pr-card">
             <h3>Exercises</h3>
 
-            <ul>
+            <Select
+              defaultValue={exercises[0]}
+              onChange={(e) => setActiveExercise(e.target.value)}>
               {exercises.length > 0 &&
                 exercises.map((exercise) => (
-                  <li className={activeExercise === exercise ? 'active' : ''}>
-                    <button onClick={() => setActiveExercise(exercise)}>
-                      {upperFirst(exercise)}
-                    </button>
-                  </li>
+                  <MenuItem key={exercise} value={exercise}>
+                    {upperFirst(exercise)}
+                  </MenuItem>
                 ))}
-            </ul>
+            </Select>
           </Card>
 
           {activeExercise && filteredPrs.length && (

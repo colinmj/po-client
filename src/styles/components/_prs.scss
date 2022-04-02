@@ -8,6 +8,10 @@
   }
 
   &.pr-lift-list {
+    .MuiSelect-root {
+      width: 75%;
+    }
+
     li {
       margin-bottom: 10px;
       &.active {
@@ -61,5 +65,19 @@
       font-size: 22px;
       margin-right: 20px;
     }
+  }
+}
+
+.no-pr-message {
+  opacity: 0;
+  animation: 0.5s ease-in 0.5s forwards 1 fadeIn;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }
